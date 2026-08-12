@@ -1,26 +1,46 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --goa-green: #005C35;
+  --goa-green-dark: #073D29;
+  --goa-green-light: #006B3C;
+  
+  --goa-yellow: #FFD21A;
+  --goa-yellow-bright: #F9C900;
+  
+  --goa-pink: #FF0A83;
+  
+  --goa-cream: #FFF7D6;
+  --goa-paper: #FFF2C2;
+  --goa-ink: #101510;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-goa-green: var(--goa-green);
+  --color-goa-green-dark: var(--goa-green-dark);
+  --color-goa-green-light: var(--goa-green-light);
+  --color-goa-yellow: var(--goa-yellow);
+  --color-goa-yellow-bright: var(--goa-yellow-bright);
+  --color-goa-pink: var(--goa-pink);
+  --color-goa-cream: var(--goa-cream);
+  --color-goa-paper: var(--goa-paper);
+  --color-goa-ink: var(--goa-ink);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--goa-ink);
+  color: var(--goa-cream);
+}
+
+.texture-grain {
+  position: relative;
+}
+.texture-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 10;
+  mix-blend-mode: multiply;
 }
