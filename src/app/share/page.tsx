@@ -1,23 +1,8 @@
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import { list } from '@vercel/blob';
 import Link from 'next/link';
 
-async function getSharedImage(id: string) {
-  try {
-    // We prefix our blobs with `goa-id-${id}`. We can find it using the list API.
-    const { blobs } = await list({ prefix: `goa-id-${id}` });
-    if (blobs.length > 0) {
-      return blobs[0].url;
-    }
-  } catch (e) {
-    console.error('Error fetching blob', e);
-  }
-  return null;
-}
-
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const imageUrl = await getSharedImage(params.id);
+export async function generateMetadata({ searchParams }: { searchParams: { url?: string } }): Promise<Metadata> {
+  const imageUrl = searchParams.url;
 
   if (!imageUrl) return {};
 
@@ -45,8 +30,8 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   };
 }
 
-export default async function SharePage({ params }: { params: { id: string } }) {
-  const imageUrl = await getSharedImage(params.id);
+export default function SharePage({ searchParams }: { searchParams: { url?: string } }) {
+  const imageUrl = searchParams.url;
   
   if (!imageUrl) {
     return (

@@ -53,9 +53,9 @@ export default function ResultPage() {
         throw new Error('Failed to upload image')
       }
       
-      const { id } = await response.json();
+      const { url } = await response.json();
       
-      const shareUrl = `${window.location.origin}/share/${id}`;
+      const shareUrl = `${window.location.origin}/share?url=${encodeURIComponent(url)}`;
       
       const tweetText = `Just secured my spot for Hacker House Goa 2026! 🌴🌊\n\nBuilder #${store.builderNumber} - ${store.builderTitle}\n\nGet your official boarding pass and join the movement ✈️👇\n${shareUrl}\n\n@247pmstudio #HHGoa2026 #FrameInGoa`;
       const text = encodeURIComponent(tweetText);
