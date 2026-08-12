@@ -35,9 +35,42 @@ export default function ResultPage() {
     setTimeout(() => setDownloadState('idle'), 3000)
   }
 
-  const handleShare = () => {
-    const text = encodeURIComponent(`Just booked my ticket to Hacker House Goa 2026! 🌴\n\nBuilder #${store.builderNumber} - ${store.builderTitle}\n\n#FrameInGoa @hackerhouse`)
-    window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank')
+  const [shareState, setShareState] = useState<'idle' | 'uploading' | 'done'>('idle')
+
+  const handleShare = async () => {
+    try {
+      setShareState('uploading')
+      
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ image: store.generatedImage }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to upload image')
+      }
+      
+      const { id } = await response.json();
+      
+      const shareUrl = `${window.location.origin}/share/${id}`;
+      
+      const tweetText = `Just secured my spot for Hacker House Goa 2026! 🌴🌊\n\nBuilder #${store.builderNumber} - ${store.builderTitle}\n\nGet your official boarding pass and join the movement ✈️👇\n${shareUrl}\n\n@247pmstudio #HHGoa2026 #FrameInGoa`;
+      const text = encodeURIComponent(tweetText);
+      
+      const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${text}`;
+      
+      setShareState('done')
+      window.open(twitterIntentUrl, '_blank')
+      
+      setTimeout(() => setShareState('idle'), 3000)
+    } catch (e) {
+      console.error(e)
+      setShareState('idle')
+      alert("Failed to prepare share link. Please try again.")
+    }
   }
 
   const containerVars: Variants = {
@@ -118,8 +151,15 @@ export default function ResultPage() {
             {downloadState === 'done' && 'DOWNLOADED ✓'}
           </Button>
 
-          <Button variant="accent" className="w-full py-5 text-xl tracking-widest font-bold" onClick={handleShare}>
-            ✖ POST ON X
+          <Button 
+            variant="accent" 
+            className="w-full py-5 text-xl tracking-widest font-bold" 
+            onClick={handleShare}
+            disabled={shareState === 'uploading'}
+          >
+            {shareState === 'idle' && '✖ POST ON X'}
+            {shareState === 'uploading' && 'PREPARING...'}
+            {shareState === 'done' && 'OPENING X...'}
           </Button>
           
           <div className="pt-8 text-center">
