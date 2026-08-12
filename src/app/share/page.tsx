@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ searchParams }: { searchParams: { url?: string } }): Promise<Metadata> {
   const imageUrl = searchParams.url;
 
